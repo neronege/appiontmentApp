@@ -1,0 +1,52 @@
+﻿@page "/login"
+@using AppointmentHospitalApp.Client.Service.ForAuth;
+@using AppointmentHospitalApp.Shared.Model;
+@using Microsoft.AspNetCore.Components.Authorization
+@inject IAuthService _authService
+@inject NavigationManager _navigationManager
+@inject Blazored.LocalStorage.ILocalStorageService _localStrogae
+@inject AuthenticationStateProvider _authenticationProvider
+
+<PageTitle>Log In</PageTitle>
+<EditForm Model="user" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="mb-3">
+        <label for="email">Email</label>
+        <InputText id="email" @bind-Value="user.Email" class="form-control"></InputText>
+        <ValidationMessage For="@(()=>user.Email)"></ValidationMessage>
+    </div>
+    <div class="mb-3">
+        <label for="password">Password</label>
+        <InputText id="password" @bind-Value="user.Password" class="form-control" type="password"></InputText>
+        <ValidationMessage For="@(()=>user.Password)"></ValidationMessage>
+    </div>
+    <ValidationSummary></ValidationSummary>
+    <button type="submit" class="btn btn-primary">Login</button>
+
+    <div class="text-danger">
+        <span>@message</span>
+    </div>
+</EditForm>
+
+
+    @code {
+        UserLogin user = new UserLogin();
+        private string message = string.Empty;
+        private async Task HandleLogin()
+        {
+            var result = await _authService.Login(user);
+
+            if (result.Success == true)
+            {
+
+                message = string.Empty;
+                await _localStrogae.SetItemAsync("authToken", result.Data);
+                await _authenticationProvider.GetAuthenticationStateAsync();
+                _navigationManager.NavigateTo("");
+            }
+            else
+            {
+                message = result.Message;
+            }
+        }
+    }

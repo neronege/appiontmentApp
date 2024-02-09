@@ -1,0 +1,77 @@
+﻿@page "/meets"
+@inject IMeetService _meetService
+@inject NavigationManager _navigationManager
+
+
+@if (meets.Count <= 0)
+{
+    <span>You have meet,yet</span>
+}
+else
+{
+    @foreach (var item in meets)
+    {
+        <div class="card" style="width:18rem;">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">@item.PoliclinicName</li>
+                <li class="list-group-item">@item.CreatedMeet</li>
+                <li class="list-group-item">@item.DoctorName</li>
+                @if (item.Status == false)
+                {
+                    <li class="list-group-item" style="color:red">@item.Status</li>
+                }
+                else
+                {
+                    <li class="list-group-item" style="color:green">@item.Status</li>
+                }
+                <li class="list-group-item">
+                    @item.MeetDate
+                </li>
+            </ul>
+            <div class="container">
+                @if (item.Status == false)
+                {
+                    <button class="btn btn-outline-warning" disabled @onclick="()=>Cancel(item.Id)">Randevu İptal</button>
+                }
+                else
+                {
+                    @*<button class="btn btn-outline-warning" @onclick="async ()=> {await _meetService.CancelMeet(item.Id);await OnInitializedAsync();}">Randevu iptal</button>*@
+                    <button class="btn btn-outline-warning" @onclick="()=>Cancel(item.Id)">Randevu iptal</button>
+
+                }
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="mb-3 text-danger">@errorMessage</div>
+        <br />
+    }
+}
+
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+    public string errorMessage = "";
+    protected override async Task OnInitializedAsync() /*=> sayfayı yenimeleye yarar*/
+    {
+        var response = await _meetService.GetMeet();
+        meets = response.Data;
+    }
+    List<Meet> meets = new List<Meet>();
+    protected async Task Cancel(int id)
+    {
+        var result = await _meetService.CancelMeet(Id);
+        if (result.Success == false)
+        {                                                          
+            errorMessage = result.Message;
+        }
+        else
+        {
+            await OnInitializedAsync();
+            //_navigationManager.NavigateTo("");
+        }
+    }
+}

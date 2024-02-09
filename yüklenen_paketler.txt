@@ -1,0 +1,14 @@
+Swasbuckle.AspNetCore 6.5 => Server
+EntityFramework 6.0.0 => Server
+EntityFramework.SqlServer 6.0.0 => Server
+EntityFramework.Design 6.0.0 => Server
+EntityFramework.Tools 6.0.0 => Server
+Authentication.JwtBearer 6.0.0 => Server
+AutoMapper 12.0.1 => Server
+AutoMapper.Extensions.Microsoft.DependencyInjection 12.0.1 => Server
+AspNetCore.Mvc.Newtonsoftjson 6.0.0 => Server
+AspNetCore.ResponseCompression 2.1.21 => Server
+AspNet.Components.WebAssembly.Server 6.0.21 => Server
+
+Blazored.LocalStorage 4.4.0 => Client
+AspNetCore.Components.Authorization 6.0.0 => Client
